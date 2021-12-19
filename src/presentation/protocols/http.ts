@@ -4,6 +4,6 @@ export interface IHttpRequest {
 }
 
 export interface IHttpResponse {
-    status: number;
+    statusCode: number;
     body?: any;
 }
