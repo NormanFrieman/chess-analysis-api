@@ -1,10 +1,11 @@
 import { ERules, ETimeClass, IGames } from "../domain/models/games";
 import { IUserInfoModel } from "../domain/models/userinfo";
 import { ILoadMatchesApi } from "../domain/usecases/load-matches-api";
+import { ISetMatches } from "../domain/usecases/set-matches";
 import { InvalidParamError, MissingParamError } from "../errors";
-import { badRequest, internalServerError, notFoundError } from "../helpers/http/http-helper";
+import { badRequest, internalServerError, notFoundError, ok } from "../helpers/http/http-helper";
 import { IHttpRequest, IValidation } from "../protocols"
-import { LoadMatchesController } from "./load-matches-controller"
+import { SetMatchesController } from "./set-matches-controller"
 
 const makeGames = (): IGames => {
     return {
@@ -30,13 +31,23 @@ const makeGames = (): IGames => {
 }
 
 const makeLoadMatches = (): ILoadMatchesApi => {
-    class LoadMatchesApi implements ILoadMatchesApi {
+    class LoadMatchesApiStub implements ILoadMatchesApi {
         async load(userInfoModel: IUserInfoModel): Promise<IGames> {
             return new Promise(resolve => resolve(makeGames()));
         }
     }
 
-    return new LoadMatchesApi();
+    return new LoadMatchesApiStub();
+}
+
+const makeSetMatches = (): ISetMatches => {
+    class SetMatchesStub implements ISetMatches {
+        async set(games: IGames): Promise<number> {
+            return new Promise(resolve => resolve(makeGames().games.length));
+        }
+    }
+
+    return new SetMatchesStub();
 }
 
 const makeFakeInput = (): IHttpRequest => {
@@ -61,18 +72,21 @@ const makeValidation = (): IValidation => {
 const makeSut = (): SutTypes => {
     const validationStub = makeValidation();
     const loadMatchesStub = makeLoadMatches();
+    const setMatchesStub = makeSetMatches();
 
     return {
-        sut: new LoadMatchesController(validationStub, loadMatchesStub),
+        sut: new SetMatchesController(validationStub, loadMatchesStub, setMatchesStub),
         validation: validationStub,
-        loadMatches: loadMatchesStub
+        loadMatches: loadMatchesStub,
+        setMatches: setMatchesStub
     }
 }
 
 interface SutTypes {
-    sut: LoadMatchesController,
+    sut: SetMatchesController,
     validation: IValidation,
-    loadMatches: ILoadMatchesApi
+    loadMatches: ILoadMatchesApi,
+    setMatches: ISetMatches
 }
 
 describe('LoadMatchesController Tests', () => {
@@ -132,7 +146,7 @@ describe('LoadMatchesController Tests', () => {
         const res = await sut.handle(req);
 
         expect(res).toEqual(notFoundError(new InvalidParamError('username or mounth'))); 
-    })
+    }),
     test('Should return 500 if loadMatches throws', async () => {
         const { sut, loadMatches } = makeSut();
 
@@ -144,5 +158,41 @@ describe('LoadMatchesController Tests', () => {
         const res = await sut.handle(req);
 
         expect(res).toEqual(internalServerError(new Error()));
+    }),
+
+
+    test('Should call setMatches with correct values', async () => {
+        const { sut, setMatches } = makeSut();
+
+        const setSpy = jest.spyOn(setMatches, 'set');
+
+        const req = makeFakeInput();
+        await sut.handle(req);
+
+        expect(setSpy).toHaveBeenCalledWith(makeGames());
+    }),
+    test('Should return 500 if setMatches throws', async () => {
+        const { sut, setMatches } = makeSut();
+
+        jest.spyOn(setMatches, 'set').mockImplementationOnce(() => {
+            throw new Error();
+        });
+
+        const req = makeFakeInput();
+        const res = await sut.handle(req);
+
+        expect(res).toEqual(internalServerError(new Error()));
+    }),
+
+
+    test('Should return 200 if sucess', async () => {
+        const { sut } = makeSut();
+
+        const req = makeFakeInput();
+        const res = await sut.handle(req);
+
+        expect(res).toEqual(ok({
+            message: `${makeGames().games.length} saved matches`
+        }));
     })
 })
