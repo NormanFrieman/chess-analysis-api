@@ -1,6 +1,6 @@
 import { ERules, ETimeClass, IGames } from "../../domain/models/games";
 import { IUserInfoModel } from "../../domain/models/userinfo";
-import { ILoadMatchesApi } from "../../domain/usecases/load-matches-api";
+import { ILoadMatches } from "../../domain/usecases/load-matches";
 import { ISetMatches } from "../../domain/usecases/set-matches";
 import { InvalidParamError, MissingParamError } from "../errors";
 import { badRequest, internalServerError, notFoundError, ok } from "../helpers/http/http-helper";
@@ -30,8 +30,8 @@ const makeGames = (): IGames => {
     }
 }
 
-const makeLoadMatches = (): ILoadMatchesApi => {
-    class LoadMatchesApiStub implements ILoadMatchesApi {
+const makeLoadMatches = (): ILoadMatches => {
+    class LoadMatchesApiStub implements ILoadMatches {
         async load(userInfoModel: IUserInfoModel): Promise<IGames> {
             return new Promise(resolve => resolve(makeGames()));
         }
@@ -85,7 +85,7 @@ const makeSut = (): SutTypes => {
 interface SutTypes {
     sut: SetMatchesController,
     validation: IValidation,
-    loadMatches: ILoadMatchesApi,
+    loadMatches: ILoadMatches,
     setMatches: ISetMatches
 }
 

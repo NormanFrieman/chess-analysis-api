@@ -1,6 +1,6 @@
 import { IGames } from "../models/games";
 import { IUserInfoModel } from "../models/userinfo";
 
-export interface ILoadMatchesApi {
+export interface ILoadMatches {
     load(userInfoModel: IUserInfoModel): Promise<IGames>;
 }

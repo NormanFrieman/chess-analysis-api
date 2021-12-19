@@ -1,4 +1,4 @@
-import { ILoadMatchesApi } from "../../domain/usecases/load-matches-api";
+import { ILoadMatches } from "../../domain/usecases/load-matches";
 import { ISetMatches } from "../../domain/usecases/set-matches";
 import { InvalidParamError } from "../errors";
 import { badRequest, internalServerError, notFoundError, ok } from "../helpers/http/http-helper";
@@ -7,7 +7,7 @@ import { IController, IHttpRequest, IHttpResponse, IValidation } from "../protoc
 export class SetMatchesController implements IController {
     constructor(
         private validation: IValidation,
-        private loadMatches: ILoadMatchesApi,
+        private loadMatches: ILoadMatches,
         private setMatches: ISetMatches
     ) { }
     async handle(httpReq: IHttpRequest): Promise<IHttpResponse> {
