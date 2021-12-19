@@ -1,0 +1,6 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo '[HUSKY] pre-commit started'
+echo '[HUSKY] running tests...'
+npm run lint
