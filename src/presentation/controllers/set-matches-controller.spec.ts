@@ -1,7 +1,7 @@
-import { ERules, ETimeClass, IGames } from "../domain/models/games";
-import { IUserInfoModel } from "../domain/models/userinfo";
-import { ILoadMatchesApi } from "../domain/usecases/load-matches-api";
-import { ISetMatches } from "../domain/usecases/set-matches";
+import { ERules, ETimeClass, IGames } from "../../domain/models/games";
+import { IUserInfoModel } from "../../domain/models/userinfo";
+import { ILoadMatchesApi } from "../../domain/usecases/load-matches-api";
+import { ISetMatches } from "../../domain/usecases/set-matches";
 import { InvalidParamError, MissingParamError } from "../errors";
 import { badRequest, internalServerError, notFoundError, ok } from "../helpers/http/http-helper";
 import { IHttpRequest, IValidation } from "../protocols"

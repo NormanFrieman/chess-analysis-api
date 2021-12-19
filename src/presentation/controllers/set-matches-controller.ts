@@ -1,5 +1,5 @@
-import { ILoadMatchesApi } from "../domain/usecases/load-matches-api";
-import { ISetMatches } from "../domain/usecases/set-matches";
+import { ILoadMatchesApi } from "../../domain/usecases/load-matches-api";
+import { ISetMatches } from "../../domain/usecases/set-matches";
 import { InvalidParamError } from "../errors";
 import { badRequest, internalServerError, notFoundError, ok } from "../helpers/http/http-helper";
 import { IController, IHttpRequest, IHttpResponse, IValidation } from "../protocols";
