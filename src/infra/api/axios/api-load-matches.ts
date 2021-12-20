@@ -11,7 +11,6 @@ export class ApiLoadMatches implements ILoadMatches {
         const response = await axios.get(url);
 
         const games = generateGames(response.data);
-        console.log(games.games.length);
         return games;
     }
 }
