@@ -17,11 +17,12 @@ export class SetMatchesController implements IController {
                 return badRequest(validation);
             }
 
-            const { username, mounth } = httpReq.body;
+            const { username, mounth, year } = httpReq.body;
 
             const loadedMatches = await this.loadMatches.load({
                 username,
-                mounth
+                mounth,
+                year
             });
             if(loadedMatches.games.length === 0){
                 return notFoundError(new InvalidParamError('username or mounth'));

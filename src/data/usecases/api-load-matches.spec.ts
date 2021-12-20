@@ -6,7 +6,8 @@ import { ApiLoadMatches } from "./api-load-matches"
 const makeFakeInput = (): IUserInfoModel => {
     return {
         username: 'any username',
-        mounth: 12
+        mounth: 12,
+        year: 2021
     };
 }
 
