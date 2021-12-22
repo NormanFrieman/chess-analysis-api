@@ -36,29 +36,29 @@ const makeSetMatchesRepository = (): ISetMatchesRepository => {
 }
 
 const makeSut = (): SutTypes => {
-    const loadMatchesRepositoryStub = makeSetMatchesRepository();
+    const setMatchesRepositoryStub = makeSetMatchesRepository();
     return {
-        sut: new DbSetMatches(loadMatchesRepositoryStub),
-        loadMatchesRepository: loadMatchesRepositoryStub
+        sut: new DbSetMatches(setMatchesRepositoryStub),
+        setMatchesRepository: setMatchesRepositoryStub
     }
 }
 
 interface SutTypes {
     sut: DbSetMatches,
-    loadMatchesRepository: ISetMatchesRepository
+    setMatchesRepository: ISetMatchesRepository
 }
 
 describe('DbSetMatches Test', () => {
-    test('Should call loadMatchesRepository with correct values', async () => {
-        const { sut, loadMatchesRepository } = makeSut();
+    test('Should call setMatchesRepository with correct values', async () => {
+        const { sut, setMatchesRepository } = makeSut();
 
-        const loadMatchesRepositorySpy = jest.spyOn(loadMatchesRepository, 'set');
+        const setMatchesRepositorySpy = jest.spyOn(setMatchesRepository, 'set');
 
         const input = makeGames();
 
         await sut.set(input);
 
-        expect(loadMatchesRepositorySpy).toHaveBeenCalledWith(input);
+        expect(setMatchesRepositorySpy).toHaveBeenCalledWith(input);
     }),
     test('Should return matches with sucess', async () => {
         const { sut } = makeSut();
@@ -69,10 +69,10 @@ describe('DbSetMatches Test', () => {
 
         expect(res).toEqual(input.games.length);
     }),
-    test('Should return error with loadMatchesRepository throws', async () => {
-        const { sut, loadMatchesRepository } = makeSut();
+    test('Should return error with setMatchesRepository throws', async () => {
+        const { sut, setMatchesRepository } = makeSut();
 
-        jest.spyOn(loadMatchesRepository, 'set').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())));
+        jest.spyOn(setMatchesRepository, 'set').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())));
 
         const input = makeGames();
         const promise = sut.set(input);
