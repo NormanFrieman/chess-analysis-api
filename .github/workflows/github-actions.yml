@@ -10,5 +10,3 @@ jobs:
           node-version: '14'
       - run: npm install
       - run: npm run test:verbose
-      - env:
-        MONGO_URL: ${{ secrets.MONGO_URL }}
