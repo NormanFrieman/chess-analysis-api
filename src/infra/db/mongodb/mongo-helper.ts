@@ -6,6 +6,7 @@ export const MongoHelper = {
     
     //#region DATABASE PROD
     async connect (uri: string): Promise<void> {
+        console.log(uri);
         this.uri = uri;
         this.client = await MongoClient.connect(this.uri);
     },
