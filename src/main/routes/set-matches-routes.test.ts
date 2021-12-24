@@ -1,13 +1,8 @@
-import { Collection } from "mongodb";
-import { ERules, ETimeClass, IGames } from "../../../domain/models/games";
-import { MongoHelper } from "./mongo-helper"
-import { SetMatchesRepository } from "./set-matches-repository";
-
-const makeSut = (): SutTypes => {
-    return {
-        sut: new SetMatchesRepository('Loaded_Matches_Test')
-    }
-};
+import { Collection } from 'mongodb';
+import request from 'supertest';
+import { ERules, ETimeClass, IGames } from '../../domain/models/games';
+import { MongoHelper } from '../../infra/db/mongodb/mongo-helper';
+import app from '../config/app';
 
 const makeGames = (): IGames => {
     return {
@@ -32,17 +27,13 @@ const makeGames = (): IGames => {
     }
 }
 
-interface SutTypes {
-    sut: SetMatchesRepository
-}
-
 const deleteData = async (collection: Collection): Promise<void> => {
     await collection.deleteMany({});
     return;
 }
 
 let matchesCollection: Collection;
-describe('SetMatchesRepository Test', () => {
+describe('SetMatches Routes', () => {
     beforeAll(async () => {
         const dotenv = (await import('dotenv')).default;
         
@@ -54,19 +45,18 @@ describe('SetMatchesRepository Test', () => {
         await MongoHelper.disconnect();
     }),
     beforeEach(async () => {
-        matchesCollection = MongoHelper.getCollection('Loaded_Matches_Test');
+        matchesCollection = MongoHelper.getCollection('Loaded_Matches');
         await deleteData(matchesCollection);
     }),
 
-    test('Should return the number of saved matches if success', async () => {
-        const { sut } = makeSut();
-
-        const res = await sut.set({
-            games: makeGames(),
-            mounth: 12,
-            year: 2021
-        });
-
-        expect(res.quant).toBe(2);
+    test('Garantir que retorne o usuário caso seja sucesso', async () => {
+        await request(app)
+            .post('/api/matches')
+            .send({
+                username: 'NormanFrieman',
+                mounth: 12,
+                year: 2021
+            })
+            .expect(200);
     })
-})
+});
