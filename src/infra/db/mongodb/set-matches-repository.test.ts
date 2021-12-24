@@ -54,7 +54,7 @@ describe('SetMatchesRepository Test', () => {
         await MongoHelper.disconnect();
     }),
     beforeEach(async () => {
-        matchesCollection = MongoHelper.getCollection('Loaded_Matches');
+        matchesCollection = MongoHelper.getCollection('Loaded_Matches_Test');
         await deleteData(matchesCollection);
     }),
 
