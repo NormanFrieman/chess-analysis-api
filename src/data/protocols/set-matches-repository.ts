@@ -1,5 +1,6 @@
-import { IGames } from "../../domain/models/games";
+import { IReturnSetMatches } from "../../domain/models/return-set-matches";
+import { ISetMatchesModel } from "../../domain/usecases/set-matches";
 
 export interface ISetMatchesRepository {
-    set(games: IGames): Promise<number>
+    set(model: ISetMatchesModel): Promise<IReturnSetMatches>
 }

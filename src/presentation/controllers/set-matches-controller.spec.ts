@@ -1,7 +1,8 @@
 import { ERules, ETimeClass, IGames } from "../../domain/models/games";
+import { IReturnSetMatches } from "../../domain/models/return-set-matches";
 import { IUserInfoModel } from "../../domain/models/userinfo";
 import { ILoadMatches } from "../../domain/usecases/load-matches";
-import { ISetMatches } from "../../domain/usecases/set-matches";
+import { ISetMatches, ISetMatchesModel } from "../../domain/usecases/set-matches";
 import { InvalidParamError, MissingParamError } from "../errors";
 import { badRequest, internalServerError, notFoundError, ok } from "../helpers/http/http-helper";
 import { IHttpRequest, IValidation } from "../protocols"
@@ -42,8 +43,11 @@ const makeLoadMatches = (): ILoadMatches => {
 
 const makeSetMatches = (): ISetMatches => {
     class SetMatchesStub implements ISetMatches {
-        async set(games: IGames): Promise<number> {
-            return new Promise(resolve => resolve(makeGames().games.length));
+        async set(model: ISetMatchesModel): Promise<IReturnSetMatches> {
+            return new Promise(resolve => resolve({
+                id: 'any_id',
+                quant: makeGames().games.length
+            }));
         }
     }
 
@@ -54,7 +58,8 @@ const makeFakeInput = (): IHttpRequest => {
     return {
         body: {
             username: 'any username',
-            mounth: 12
+            mounth: 12,
+            year: 2021
         }
     };
 };
@@ -134,7 +139,8 @@ describe('LoadMatchesController Tests', () => {
 
         expect(loadSpy).toHaveBeenCalledWith({
             username: 'any username',
-            mounth: 12
+            mounth: 12,
+            year: 2021
         });
     }),
     test('Should return 404 if no match is found', async () => {
@@ -169,7 +175,11 @@ describe('LoadMatchesController Tests', () => {
         const req = makeFakeInput();
         await sut.handle(req);
 
-        expect(setSpy).toHaveBeenCalledWith(makeGames());
+        expect(setSpy).toHaveBeenCalledWith({
+            games: makeGames(),
+            mounth: req.body.mounth,
+            year: req.body.year
+        });
     }),
     test('Should return 500 if setMatches throws', async () => {
         const { sut, setMatches } = makeSut();
@@ -192,7 +202,11 @@ describe('LoadMatchesController Tests', () => {
         const res = await sut.handle(req);
 
         expect(res).toEqual(ok({
-            message: `${makeGames().games.length} saved matches`
+            message: `${makeGames().games.length} saved matches`,
+            body: {
+                id: 'any_id',
+                quant: 2
+            }
         }));
     })
 })

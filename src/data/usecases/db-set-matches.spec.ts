@@ -1,4 +1,6 @@
 import { ERules, ETimeClass, IGames } from "../../domain/models/games";
+import { IReturnSetMatches } from "../../domain/models/return-set-matches";
+import { ISetMatchesModel } from "../../domain/usecases/set-matches";
 import { ISetMatchesRepository } from "../protocols/set-matches-repository";
 import { DbSetMatches } from "./db-set-matches";
 
@@ -27,8 +29,11 @@ const makeGames = (): IGames => {
 
 const makeSetMatchesRepository = (): ISetMatchesRepository => {
     class SetMatchesRepositoryStub implements ISetMatchesRepository {
-        set(games: IGames): Promise<number> {
-            return new Promise(resolve => resolve(makeGames().games.length));
+        set(model: ISetMatchesModel): Promise<IReturnSetMatches> {
+            return new Promise(resolve => resolve({
+                id: 'any_id',
+                quant: makeGames().games.length
+            }));
         }
     }
 
@@ -56,18 +61,33 @@ describe('DbSetMatches Test', () => {
 
         const input = makeGames();
 
-        await sut.set(input);
+        await sut.set({
+            games: input,
+            mounth: 12,
+            year: 2021
+        });
 
-        expect(setMatchesRepositorySpy).toHaveBeenCalledWith(input);
+        expect(setMatchesRepositorySpy).toHaveBeenCalledWith({
+            games: input,
+            mounth: 12,
+            year: 2021
+        });
     }),
     test('Should return matches with sucess', async () => {
         const { sut } = makeSut();
 
         const input = makeGames();
 
-        const res = await sut.set(input);
+        const res = await sut.set({
+            games: input,
+            mounth: 12,
+            year: 2021
+        });
 
-        expect(res).toEqual(input.games.length);
+        expect(res).toEqual({
+            id: 'any_id',
+            quant: input.games.length
+        });
     }),
     test('Should return error with setMatchesRepository throws', async () => {
         const { sut, setMatchesRepository } = makeSut();
@@ -75,7 +95,11 @@ describe('DbSetMatches Test', () => {
         jest.spyOn(setMatchesRepository, 'set').mockReturnValueOnce(new Promise((resolve, reject) => reject(new Error())));
 
         const input = makeGames();
-        const promise = sut.set(input);
+        const promise = sut.set({
+            games: input,
+            mounth: 12,
+            year: 2021
+        });
 
         await expect(promise).rejects.toThrow();
     })

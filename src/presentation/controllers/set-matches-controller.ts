@@ -28,10 +28,15 @@ export class SetMatchesController implements IController {
                 return notFoundError(new InvalidParamError('username or mounth'));
             }
 
-            const quantMatches = await this.setMatches.set(loadedMatches);
+            const res = await this.setMatches.set({
+                games: loadedMatches,
+                mounth,
+                year
+            });
     
             return ok({
-                message: `${quantMatches} saved matches`
+                message: `${res.quant} saved matches`,
+                body: res
             });
         }
         catch(err){
