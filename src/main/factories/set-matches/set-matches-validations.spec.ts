@@ -5,7 +5,7 @@ import { makeSetMatchesValidation } from "./set-matches-validations";
 jest.mock('../../../presentation/helpers/validators/validation-composite');
 
 const makeRequiredFieldsValidation = (): IValidation => {
-    const fields = ['games', 'mounth', 'year'];
+    const fields = ['username', 'mounth', 'year'];
     return new RequiredFieldsValidation(fields);
 }
 
