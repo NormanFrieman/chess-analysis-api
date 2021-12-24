@@ -11,4 +11,4 @@ jobs:
       - run: npm install
       - run: npm run test:verbose
         env:
-          MONGO_URL: test_env
+          MONGO_URL: ${{ secrest.MONGO_URL }}
