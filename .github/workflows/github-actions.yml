@@ -9,6 +9,6 @@ jobs:
         with:
           node-version: '14'
       - run: npm install
-      - run: npm run test:verbose
+      - run: jest --passWithNoTests --silent --noStackTrace --runInBand -c jest-unit-config.js
         env:
           MONGO_URL: ${{ secrets.MONGO_URL }}

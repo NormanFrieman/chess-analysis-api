@@ -44,7 +44,6 @@ const deleteData = async (collection: Collection): Promise<void> => {
 let matchesCollection: Collection;
 describe('SetMatchesRepository Test', () => {
     beforeAll(async () => {
-        jest.setTimeout(10000);
         const dotenv = (await import('dotenv')).default;
         
         dotenv.config();
