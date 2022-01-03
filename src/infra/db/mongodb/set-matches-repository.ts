@@ -4,11 +4,8 @@ import { ISetMatchesModel } from "../../../domain/usecases/set-matches";
 import { MongoHelper } from "./mongo-helper";
 
 export class SetMatchesRepository implements ISetMatchesRepository {
-    constructor(
-        private readonly collectionName: string
-    ) { }
     async set(model: ISetMatchesModel): Promise<IReturnSetMatches> {
-        const matchesCollection = MongoHelper.getCollection(this.collectionName);
+        const matchesCollection = MongoHelper.getLoadedMatchesCollection();
 
         const result = await matchesCollection.insertOne(model);
 

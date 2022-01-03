@@ -5,7 +5,7 @@ import { SetMatchesRepository } from "./set-matches-repository";
 
 const makeSut = (): SutTypes => {
     return {
-        sut: new SetMatchesRepository('Loaded_Matches_Test')
+        sut: new SetMatchesRepository()
     }
 };
 
@@ -48,13 +48,14 @@ describe('SetMatchesRepository Test', () => {
         
         dotenv.config();
         await MongoHelper.connect(process.env.MONGO_URL);
+        MongoHelper.setLoadedMatchesCollection('Loaded_Matches_Test');
     }),
     afterAll(async () => {
         await deleteData(matchesCollection);
         await MongoHelper.disconnect();
     }),
     beforeEach(async () => {
-        matchesCollection = MongoHelper.getCollection('Loaded_Matches_Test');
+        matchesCollection = MongoHelper.getLoadedMatchesCollection();
         await deleteData(matchesCollection);
     }),
 

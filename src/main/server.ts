@@ -8,6 +8,7 @@ MongoHelper.connect(process.env.MONGO_URL)
         
         dotenv.config();
 
+        MongoHelper.setLoadedMatchesCollection('Loaded_Matches');
         app.listen(process.env.SERVERPORT, () => {
             console.log(`server running at http://localhost:${process.env.SERVERPORT}`);
         });

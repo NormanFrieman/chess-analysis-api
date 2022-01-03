@@ -12,7 +12,7 @@ export const makeSetMatches = (): IController => {
     const apiLoadMatches = new ApiLoadMatches();
     const loadMatches = new LoadMatches(apiLoadMatches);
 
-    const setMatchesRepository = new SetMatchesRepository('Loaded_Matches');
+    const setMatchesRepository = new SetMatchesRepository();
     const dbSetMatches = new DbSetMatches(setMatchesRepository);
 
 

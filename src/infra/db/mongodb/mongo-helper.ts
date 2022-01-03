@@ -3,6 +3,8 @@ import { MongoClient, Collection } from 'mongodb'
 export const MongoHelper = {
     client: null as MongoClient,
     uri: null as string,
+
+    loadedMatchesCollection: null as string,
     
     //#region DATABASE PROD
     async connect (uri: string): Promise<void> {
@@ -14,8 +16,11 @@ export const MongoHelper = {
             await this.client.close();
         this.client = null;
     },
-    getCollection (name: string): Collection {
-        return this.client.db().collection(name);
+    setLoadedMatchesCollection (name: string): void {
+        this.loadedMatchesCollection = name;
+    },
+    getLoadedMatchesCollection (): Collection {
+        return this.client.db().collection(this.loadedMatchesCollection);
     },
     //#endregion
 

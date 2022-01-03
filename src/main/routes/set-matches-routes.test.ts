@@ -39,13 +39,14 @@ describe('SetMatches Routes', () => {
         
         dotenv.config();
         await MongoHelper.connect(process.env.MONGO_URL);
+        MongoHelper.setLoadedMatchesCollection('Loaded_Matches_Test');
     }),
     afterAll(async () => {
         await deleteData(matchesCollection);
         await MongoHelper.disconnect();
     }),
     beforeEach(async () => {
-        matchesCollection = MongoHelper.getCollection('Loaded_Matches');
+        matchesCollection = MongoHelper.getLoadedMatchesCollection();
         await deleteData(matchesCollection);
     }),
 
